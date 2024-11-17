@@ -28,7 +28,7 @@
     "bsky:post-new": "ts-node src/scripts/post-new-posts.ts",
     "bsky:delete-posts": "ts-node src/deletePosts.ts",
     "db:fetch-posts": "ts-node src/fetchPosts.ts",
-    "fetch-hoffs": "ts-node src/scripts/fetch-hoffs.ts",
-    "fetch-mentions": "ts-node src/scripts/fetch-mentions.ts"
+    "hoffbot:fetch-hoffs": "ts-node src/scripts/fetch-hoffs.ts",
+    "hoffbot:like-mentions": "ts-node src/scripts/like-mentions.ts"
   }
 }
