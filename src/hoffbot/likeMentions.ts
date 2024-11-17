@@ -1,7 +1,17 @@
 import { login, agent } from '../bsky/auth';
 import db from '../database/db';
 import { FeedPost } from '../types';
+import dotenv from 'dotenv';
 
+dotenv.config();
+
+const FEED_URI = process.env.FEED_URI;
+
+/**
+ * Save a post to the database
+ * @param post
+ * @returns
+ */
 function insertPost(post: {
   uri: string;
   text: string;
@@ -36,6 +46,11 @@ function insertPost(post: {
   });
 }
 
+/**
+ * Record an interaction with a post
+ * @param interaction
+ * @returns
+ */
 function insertInteraction(interaction: { postUri: string; type: string }) {
   return new Promise<void>((resolve, reject) => {
     db.run(
@@ -53,10 +68,17 @@ function insertInteraction(interaction: { postUri: string; type: string }) {
   });
 }
 
+/**
+ * Like any post that mentions The Hoff
+ */
 export async function likeMentions() {
+  if (!FEED_URI) {
+    throw new Error('FEED_URI not set in .env file');
+  }
+
   await login();
   const feed = await agent.api.app.bsky.feed.getFeed({
-    feed: 'at://did:plc:dnsniewfm6uqmfzq2yfcp52z/app.bsky.feed.generator/hoffmentions',
+    feed: FEED_URI,
   });
 
   for (const item of feed.data.feed) {
