@@ -5,7 +5,7 @@ import { likeMentions } from './hoffbot/likeMentions';
 login()
   .then(() => {
     console.log('Starting the hoffbot...');
-    const scheduleExpression = '*/10 * * * *';
+    const scheduleExpression = '*/5 * * * *';
     const likeMentionsJob = new CronJob(scheduleExpression, async () => {
       await likeMentions();
     });

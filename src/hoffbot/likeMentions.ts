@@ -102,7 +102,7 @@ export async function likeMentions() {
         type: 'like',
       });
     } catch (err) {
-      console.log(err);
+      // console.log(err);
     }
   }
 }
