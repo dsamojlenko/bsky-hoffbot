@@ -3,7 +3,7 @@
 import { BskyAgent } from '@atproto/api';
 import { login, agent } from '../bsky/auth';
 
-const getFollowers = async (agent: BskyAgent) => {
+const getFollowers = async (agent: BskyAgent): Promise<string[]> => {
   const { data } = await agent.api.app.bsky.graph.getFollowers({
     actor: 'hoffbot.bsky.social',
   });
@@ -11,7 +11,7 @@ const getFollowers = async (agent: BskyAgent) => {
   return data.followers.map((follower) => follower.did);
 };
 
-const getFollows = async (agent: BskyAgent) => {
+const getFollows = async (agent: BskyAgent): Promise<string[]> => {
   const { data } = await agent.api.app.bsky.graph.getFollows({
     actor: 'hoffbot.bsky.social',
   });

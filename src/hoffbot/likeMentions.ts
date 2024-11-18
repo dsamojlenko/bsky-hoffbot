@@ -1,6 +1,6 @@
 import { login, agent } from '../bsky/auth';
 import db from '../database/db';
-import { FeedPost } from '../types';
+import { Post, FeedPost, Interaction } from '../types';
 import dotenv from 'dotenv';
 
 dotenv.config();
@@ -12,13 +12,7 @@ const FEED_URI = process.env.FEED_URI;
  * @param post
  * @returns
  */
-const insertPost = (post: {
-  uri: string;
-  text: string;
-  authorDid: string;
-  authorHandle: string;
-  authorDisplayName: string;
-}) => {
+const insertPost = (post: Post) => {
   return new Promise<void>((resolve, reject) => {
     db.run(
       'INSERT INTO posts (uri, text, authorDid, authorHandle, authorDisplayName) VALUES (?, ?, ?, ?, ?)',
@@ -51,7 +45,7 @@ const insertPost = (post: {
  * @param interaction
  * @returns
  */
-const insertInteraction = (interaction: { postUri: string; type: string }) => {
+const insertInteraction = (interaction: Interaction) => {
   return new Promise<void>((resolve, reject) => {
     db.run(
       'INSERT INTO interactions (postUri, type) VALUES (?, ?)',

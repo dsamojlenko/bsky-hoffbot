@@ -6,7 +6,7 @@ export type Author = {
   displayName: string;
 };
 
-export type DbPost = {
+export type Post = {
   uri: string;
   text: string;
   authorDid: string;
@@ -22,9 +22,14 @@ export type FeedPost = PostView & {
 
 export type Interaction = {
   type: 'like' | 'comment';
-  post: DbPost;
+  postUri: string;
 };
 
 export type Record = {
   text: string;
 };
+
+export type RandomImage = {
+  data: Uint8Array;
+  type: string;
+}

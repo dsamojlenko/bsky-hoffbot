@@ -4,6 +4,7 @@ import { login, agent } from '../bsky/auth';
 import { BskyAgent } from '@atproto/api';
 import sharp from 'sharp';
 import util from 'util';
+import { RandomImage } from '../types';
 
 const readFile = util.promisify(fs.readFile);
 
@@ -14,7 +15,7 @@ const getRandomQuote = (): string => {
   return quotes[randomIndex];
 };
 
-const getRandomImage = async () => {
+const getRandomImage = async (): Promise<RandomImage> => {
   const imagesPath = path.resolve(__dirname, '../../resources/hoffpics');
   const images = fs.readdirSync(imagesPath);
   const randomImageIndex = Math.floor(Math.random() * images.length);
