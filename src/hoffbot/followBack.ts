@@ -19,7 +19,7 @@ const getFollows = async (agent: BskyAgent) => {
   return data.follows.map((follow) => follow.did);
 };
 
-export async function followBack() {
+export const followBack = async () => {
   await login();
 
   const followers = await getFollowers(agent);

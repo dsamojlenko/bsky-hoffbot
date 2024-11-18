@@ -9,15 +9,15 @@ login()
     console.log('Starting the hoffbot...');
     const scheduleExpression = '*/5 * * * *';
     const likeMentionsJob = new CronJob(scheduleExpression, async () => {
-      console.log('Running likeMentionsJob');
+      // console.log('Running likeMentionsJob');
       await likeMentions();
     });
     const followBackJob = new CronJob(scheduleExpression, async () => {
-      console.log('Running followBackJob');
+      // console.log('Running followBackJob');
       await followBack();
     });
     const dailyHoffJob = new CronJob('0 10 * * *', async () => {
-      console.log('Running dailyHoffJob');
+      // console.log('Running dailyHoffJob');
       await dailyHoff();
     });
 

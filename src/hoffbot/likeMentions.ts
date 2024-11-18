@@ -12,13 +12,13 @@ const FEED_URI = process.env.FEED_URI;
  * @param post
  * @returns
  */
-function insertPost(post: {
+const insertPost = (post: {
   uri: string;
   text: string;
   authorDid: string;
   authorHandle: string;
   authorDisplayName: string;
-}) {
+}) => {
   return new Promise<void>((resolve, reject) => {
     db.run(
       'INSERT INTO posts (uri, text, authorDid, authorHandle, authorDisplayName) VALUES (?, ?, ?, ?, ?)',
@@ -51,7 +51,7 @@ function insertPost(post: {
  * @param interaction
  * @returns
  */
-function insertInteraction(interaction: { postUri: string; type: string }) {
+const insertInteraction = (interaction: { postUri: string; type: string }) => {
   return new Promise<void>((resolve, reject) => {
     db.run(
       'INSERT INTO interactions (postUri, type) VALUES (?, ?)',

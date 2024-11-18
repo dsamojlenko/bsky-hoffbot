@@ -40,7 +40,7 @@ const getRandomImage = async () => {
   };
 };
 
-async function resizeImage(buffer: Buffer): Promise<Buffer> {
+const resizeImage = async (buffer: Buffer): Promise<Buffer> =>{
   let newSize = 0.9; // Start with 90% of original size
   let outputBuffer = buffer;
   const image = sharp(buffer);
@@ -109,7 +109,7 @@ export const dailyHoff = async () => {
   login().then(async () => {
     const post = await preparePost(quote, image.data, image.type, agent);
     if (!post) {
-      console.log('problemo');
+      console.log('There was a problem preparing the post');
       return;
     }
     console.log(post);
