@@ -17,7 +17,7 @@ login()
       await followBack();
     });
     const dailyHoffJob = new CronJob('0 10 * * *', async () => {
-      // console.log('Running dailyHoffJob');
+      console.log("It's 10am, time for the daily Hoff!");
       await dailyHoff();
     });
 
