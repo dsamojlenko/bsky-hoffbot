@@ -22,6 +22,7 @@
     "bsky:delete-posts": "ts-node src/deletePosts.ts",
     "hoffbot:like-mentions": "ts-node src/scripts/like-mentions.ts | tee -a logs/like-mentions.log",
     "hoffbot:follow-back": "ts-node src/scripts/follow-back.ts | tee -a logs/follow-back.log",
-    "hoffbot:daily-hoff": "ts-node src/scripts/daily-hoff.ts | tee -a logs/daily-hoff.log"
+    "hoffbot:daily-hoff": "ts-node src/scripts/daily-hoff.ts | tee -a logs/daily-hoff.log",
+    "hoffbot:get-posts": "ts-node src/scripts/get-posts.ts | tee -a logs/get-posts.log"
   }
 }
