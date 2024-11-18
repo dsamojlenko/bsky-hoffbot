@@ -6,7 +6,9 @@
     "cron": "^3.1.0",
     "dotenv": "^16.3.1",
     "process": "^0.11.10",
-    "sqlite3": "^5.1.7"
+    "sharp": "^0.33.5",
+    "sqlite3": "^5.1.7",
+    "util": "^0.12.5"
   },
   "devDependencies": {
     "@types/sqlite3": "^3.1.11",
@@ -18,8 +20,8 @@
     "start": "ts-node src/index.ts",
     "db:init": "ts-node src/scripts/init-db.ts",
     "bsky:delete-posts": "ts-node src/deletePosts.ts",
-    "hoffbot:fetch-hoffs": "ts-node src/scripts/fetch-hoffs.ts",
     "hoffbot:like-mentions": "ts-node src/scripts/like-mentions.ts",
-    "hoffbot:follow-back": "ts-node src/scripts/follow-back.ts"
+    "hoffbot:follow-back": "ts-node src/scripts/follow-back.ts",
+    "hoffbot:daily-hoff": "ts-node src/scripts/daily-hoff.ts"
   }
 }
