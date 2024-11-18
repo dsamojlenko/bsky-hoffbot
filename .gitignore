@@ -10,3 +10,5 @@ dist
 
 hoffpics
 quotes.txt
+
+logs/*.log
