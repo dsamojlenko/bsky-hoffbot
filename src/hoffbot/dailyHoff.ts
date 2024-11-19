@@ -39,7 +39,7 @@ export const dailyHoff = async () => {
 
   login()
     .then(async (bot) => {
-      const response = await bot.post({
+      await bot.post({
         text: quote,
         images: [
           {
@@ -48,8 +48,6 @@ export const dailyHoff = async () => {
           },
         ],
       });
-
-      console.log(response);
     })
     .catch((err) => {
       console.error(err);
