@@ -6,14 +6,26 @@ const start = async () => {
   console.log('Starting the hoffbot...');
 
   const bot = await login();
-  bot.on('mention', async (mention) => {
-    console.log('Mention received:', mention);
-    await bot.like(mention.cid);
+  bot.on('mention', async (post) => {
+    console.log('Mention received:', {
+      cid: post.cid,
+      text: post.text,
+      author: {
+        did: post.author.did,
+        handle: post.author.handle,
+        displayName: post.author.displayName,
+      }
+    });
+    await bot.like(post.cid);
   });
 
-  bot.on('follow', async (follower) => {
-    console.log('Follow received:', follower);
-    await follower.user.follow();
+  bot.on('follow', async (follow) => {
+    console.log('Follow received:', {
+      did: follow.user.did,
+      handle: follow.user.handle,
+      displayName: follow.user.displayName,
+    });
+    await follow.user.follow();
   });
 
   const dailyHoffJob = new CronJob('0 10 * * *', async () => {
