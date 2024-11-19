@@ -1,28 +1,21 @@
 {
+  "name": "bsky-hoffbot",
+  "type": "module",
   "dependencies": {
-    "@atproto/api": "^0.6.20",
-    "axios": "^1.7.7",
-    "cheerio": "^1.0.0",
+    "@skyware/bot": "^0.3.7",
     "cron": "^3.1.0",
     "dotenv": "^16.3.1",
     "process": "^0.11.10",
-    "sharp": "^0.33.5",
-    "sqlite3": "^5.1.7",
+    "tsx": "^4.19.2",
     "util": "^0.12.5"
   },
   "devDependencies": {
-    "@types/sqlite3": "^3.1.11",
     "prettier": "^3.3.3",
-    "ts-node": "^10.9.2",
     "typescript": "^5.6.3"
   },
   "scripts": {
-    "start": "ts-node src/index.ts | tee -a logs/hoffbot.log",
-    "db:init": "ts-node src/scripts/init-db.ts | tee -a logs/db.log",
-    "bsky:delete-posts": "ts-node src/deletePosts.ts",
-    "hoffbot:like-mentions": "ts-node src/scripts/like-mentions.ts | tee -a logs/like-mentions.log",
-    "hoffbot:follow-back": "ts-node src/scripts/follow-back.ts | tee -a logs/follow-back.log",
-    "hoffbot:daily-hoff": "ts-node src/scripts/daily-hoff.ts | tee -a logs/daily-hoff.log",
-    "hoffbot:get-posts": "ts-node src/scripts/get-posts.ts | tee -a logs/get-posts.log"
+    "start": "tsx src/index.ts | tee -a logs/hoffbot.log",
+    "hoffbot:daily-hoff": "tsx src/scripts/daily-hoff.ts | tee -a logs/daily-hoff.log",
+    "hoffbot:get-posts": "tsx src/scripts/get-posts.ts | tee -a logs/get-posts.log"
   }
 }

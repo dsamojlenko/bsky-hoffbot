@@ -1,4 +1,4 @@
-import { login, agent } from "../bsky/auth"
+import { login } from "../bsky/auth"
 import dotenv from 'dotenv';
 
 dotenv.config();
@@ -10,13 +10,19 @@ if (!HOFFBOT_AT) {
 }
 
 export const getPosts = async () => {
-  login().then(async () => {
-    const posts = await agent.getAuthorFeed({
-      actor: HOFFBOT_AT,
-    })
-
-    for (const post of posts.data.feed) {
-      console.log(post);
+  login().then(async (bot) => {
+    const response = await bot.getUserPosts(HOFFBOT_AT);
+    for (const post of response.posts) {
+      console.log({
+        id: post.cid,
+        text: post.text,
+        embed: post.embed,
+        createdAt: post.createdAt
+      });
     }
-  })
+  }).catch((err) => {
+    console.error(err);
+  }).finally(() => {
+    process.exit();
+  });
 }

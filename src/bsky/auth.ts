@@ -1,16 +1,24 @@
-import { BskyAgent } from '@atproto/api';
+import { Bot } from '@skyware/bot';
 import * as process from 'process';
 import * as dotenv from 'dotenv';
 
 dotenv.config();
 
-export const agent = new BskyAgent({
-  service: 'https://bsky.social',
+if (!process.env.BSKY_USERNAME || !process.env.BSKY_PASSWORD) {
+  throw new Error('BSKY_USERNAME and BSKY_PASSWORD must be set');
+}
+
+export const bot = new Bot({
+  eventEmitterOptions: {
+    pollingInterval: 100,
+  },
 });
 
 export const login = async () => {
-  await agent.login({
-    identifier: process.env.BLUESKY_USERNAME!,
-    password: process.env.BLUESKY_PASSWORD!,
+  await bot.login({
+    identifier: process.env.BSKY_USERNAME!,
+    password: process.env.BSKY_PASSWORD!,
   });
+
+  return bot;
 };

@@ -1,31 +1,30 @@
 import { CronJob } from 'cron';
 import { login } from './bsky/auth';
-import { likeMentions } from './hoffbot/likeMentions';
-import { followBack } from './hoffbot/followBack';
 import { dailyHoff } from './hoffbot/dailyHoff';
 
-login()
-  .then(() => {
-    console.log('Starting the hoffbot...');
-    const scheduleExpression = '*/5 * * * *';
-    const likeMentionsJob = new CronJob(scheduleExpression, async () => {
-      // console.log('Running likeMentionsJob');
-      await likeMentions();
-    });
-    const followBackJob = new CronJob(scheduleExpression, async () => {
-      // console.log('Running followBackJob');
-      await followBack();
-    });
-    const dailyHoffJob = new CronJob('0 10 * * *', async () => {
-      console.log("It's 10am, time for the daily Hoff!");
-      await dailyHoff();
-    });
+const start = async () => {
+  console.log('Starting the hoffbot...');
 
-    // Start the cron jobs
-    likeMentionsJob.start();
-    followBackJob.start();
-    dailyHoffJob.start();
-  })
-  .catch((err) => {
-    console.error('Error during setup', err);
+  const bot = await login();
+  bot.on('mention', async (mention) => {
+    console.log('Mention received:', mention);
+    await bot.like(mention.cid);
   });
+
+  bot.on('follow', async (follower) => {
+    console.log('Follow received:', follower);
+    await follower.user.follow();
+  });
+
+  const dailyHoffJob = new CronJob('0 10 * * *', async () => {
+    console.log("It's 10am, time for the daily Hoff!");
+    await dailyHoff();
+  });
+
+  dailyHoffJob.start();
+};
+
+start().catch((err) => {
+  console.error(err);
+  process.exit(1);
+});
