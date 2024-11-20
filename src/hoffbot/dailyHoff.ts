@@ -1,32 +1,69 @@
 import fs from 'fs';
 import path from 'path';
 import { login } from '../bsky/auth';
-import util from 'util';
+import { readFile } from 'fs/promises';
 
-const readFile = util.promisify(fs.readFile);
+const usedQuotesPath = path.resolve('./logs/usedQuotes.log');
+const usedImagesPath = path.resolve('./logs/usedImages.log');
 
 const getRandomQuote = (): string => {
   const quotesPath = path.resolve('./resources/quotes.txt');
   const quotes = fs.readFileSync(quotesPath, 'utf-8').split('\n');
-  const randomIndex = Math.floor(Math.random() * quotes.length);
-  return `"${quotes[randomIndex]}"`;
+  let usedQuotes = fs.existsSync(usedQuotesPath) ? fs.readFileSync(usedQuotesPath, 'utf-8').split('\n') : [];
+
+  // Reset usedQuotes if all quotes have been used
+  if (usedQuotes.length >= quotes.length) {
+    usedQuotes = [];
+    fs.writeFileSync(usedQuotesPath, '');
+  }
+
+  let randomQuote;
+  do {
+    const randomIndex = Math.floor(Math.random() * quotes.length);
+    randomQuote = quotes[randomIndex];
+  } while (usedQuotes.includes(randomQuote));
+
+  fs.appendFileSync(usedQuotesPath, `${randomQuote}\n`);
+  return `"${randomQuote}"`;
 };
 
-const getRandomImage = async (): Promise<Blob> => {
-  const imagesPath = path.resolve('./resources/hoffpics');
-  const images = fs.readdirSync(imagesPath);
-  const randomImageIndex = Math.floor(Math.random() * images.length);
-  const randomImage = images[randomImageIndex];
+const getFileExtension = (filename: string): string => {
+  return path.extname(filename).toLowerCase();
+}
 
-  const buffer = await readFile(path.resolve(imagesPath, randomImage));
-  const ext = path.extname(randomImage).toLowerCase();
-
+const getImageType = (ext: string): string => {
   let imageType = 'image/jpeg';
   if (ext === '.webp') {
     imageType = 'image/webp';
   } else if (ext === '.avif') {
     imageType = 'image/avif';
   }
+
+  return imageType;
+}
+
+const getRandomImage = async (): Promise<Blob> => {
+  const imagesPath = path.resolve('./resources/hoffpics');
+  const images = fs.readdirSync(imagesPath);
+  let usedImages = fs.existsSync(usedImagesPath) ? fs.readFileSync(usedImagesPath, 'utf-8').split('\n') : [];
+
+  // Reset usedImages if all images have been used
+  if (usedImages.length >= images.length) {
+    usedImages = [];
+    fs.writeFileSync(usedImagesPath, '');
+  }
+
+  let randomImage;
+  do {
+    const randomImageIndex = Math.floor(Math.random() * images.length);
+    randomImage = images[randomImageIndex];
+  } while (usedImages.includes(randomImage));
+
+  fs.appendFileSync(usedImagesPath, `${randomImage}\n`);
+
+  const buffer = await readFile(path.resolve(imagesPath, randomImage));
+  const ext = getFileExtension(randomImage);
+  const imageType = getImageType(ext);
 
   const blob = new Blob([buffer], { type: imageType });
 
@@ -37,6 +74,11 @@ export const dailyHoff = async () => {
   const quote = getRandomQuote();
   const image = await getRandomImage();
 
+  console.log({
+    image,
+    quote,
+  });
+  
   login()
     .then(async (bot) => {
       await bot.post({
