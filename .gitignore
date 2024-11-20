@@ -1,14 +1,6 @@
-# Dependency directories
-node_modules/
-
-# environment variable files
 .env
-
-dist
-
-*.db
-
-hoffpics
+node_modules/
 quotes.txt
 
 *.log
+*.db
