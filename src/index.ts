@@ -1,11 +1,14 @@
 import { CronJob } from 'cron';
 import { login } from './bsky/auth';
 import { dailyHoff } from './hoffbot/dailyHoff';
+import { likeMentions } from './hoffbot/likeMentions';
 
 const start = async () => {
   console.log('Starting the hoffbot...');
 
   const bot = await login();
+
+  // This catches bot-specific mentions
   bot.on('mention', async (post) => {
     console.log('Mention received:', {
       cid: post.cid,
@@ -34,6 +37,14 @@ const start = async () => {
   });
 
   dailyHoffJob.start();
+
+  // This one checks the Feed for mentions of The Hoff
+  const likeMentionsJob = new CronJob('0 * * * *', async () => {
+    console.log('Checking for mentions...');
+    await likeMentions();
+  });
+
+  likeMentionsJob.start();
 };
 
 start().catch((err) => {
