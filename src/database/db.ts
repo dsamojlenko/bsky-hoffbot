@@ -9,10 +9,12 @@ if (!dbFile) {
   throw new Error('DATABASE_FILE not set in .env file');
 }
 
-export const db = new sqlite3.Database(dbFile, (err) => {
+const db = new sqlite3.Database(dbFile, (err) => {
   if (err) {
     console.error('Could not connect to database', err);
   } else {
     console.log('Connected to database');
   }
 });
+
+export default db;

@@ -39,7 +39,7 @@ const start = async () => {
   dailyHoffJob.start();
 
   // This one checks the Feed for mentions of The Hoff
-  const likeMentionsJob = new CronJob('0 * * * *', async () => {
+  const likeMentionsJob = new CronJob('0 */3 * * *', async () => {
     console.log('Checking for mentions...');
     await likeMentions();
   });

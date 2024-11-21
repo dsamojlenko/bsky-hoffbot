@@ -1,5 +1,5 @@
 
-import { db } from '../database/db';
+import db from '../database/db';
 import dotenv from 'dotenv';
 import { Interaction, Post } from '../types';
 import { login } from '../bsky/auth';
@@ -8,38 +8,7 @@ dotenv.config();
 
 const FEED_URI = process.env.FEED_URI;
 
-/**
- * Save a post to the database
- * @param post
- * @returns
- */
-const insertPost = (post: Post) => {
-  return new Promise<void>((resolve, reject) => {
-    db.run(
-      'INSERT INTO posts (uri, text, authorDid, authorHandle, authorDisplayName) VALUES (?, ?, ?, ?, ?)',
-      [
-        post.uri,
-        post.text,
-        post.authorDid,
-        post.authorHandle,
-        post.authorDisplayName,
-      ],
-      (err) => {
-        if (err) {
-          if ((err as any).code === 'SQLITE_CONSTRAINT') {
-            reject(`Already interacted with ${post.uri}`);
-          } else {
-            console.error('Could not insert post', err);
-            reject(err);
-          }
-        } else {
-          console.log('New mention found', post.uri);
-          resolve();
-        }
-      },
-    );
-  });
-}
+
 
 /**
  * Record an interaction with a post
@@ -53,9 +22,14 @@ const insertInteraction = (interaction: Interaction) => {
       [interaction.postUri, interaction.type],
       (err) => {
         if (err) {
-          console.error('Could not insert interaction', err);
-          reject(err);
+          if ((err as any).code === 'SQLITE_CONSTRAINT') {
+            reject(`Already interacted with ${interaction.postUri}`);
+          } else {
+            console.error('Could not insert interaction', err);
+            reject(err);
+          }
         } else {
+          console.log('New interaction', interaction);
           resolve();
         }
       },
@@ -71,37 +45,28 @@ export async function likeMentions() {
     throw new Error('FEED_URI not set in .env file');
   }
 
-  const bot = await login();
-  const feed = await bot.getFeedGenerator(FEED_URI);
-  const posts = await feed.getPosts();
+  login().then(async (bot) => {
+    const feed = await bot.getFeedGenerator(FEED_URI);
+    const posts = await feed.getPosts();
 
+    for (const post of posts.posts) {
+      try {
+        await insertInteraction({
+          postUri: post.uri,
+          type: 'like',
+        });
 
-  // const feed = await agent.api.app.bsky.feed.getFeed({
-  //   feed: FEED_URI,
-  // });
+        console.log("liking the post");
+        // Like the post
+        post.like();
 
-  for (const post of posts.posts) {
-
-    try {
-      await insertPost({
-        uri: post.uri,
-        text: post.text,
-        authorDid: post.author.did,
-        authorHandle: post.author.handle,
-        authorDisplayName: post.author.displayName || "",
-      });
-
-      console.log('Liking post', post.uri);
-
-      // Like the post
-      await bot.like(post.cid);
-
-      await insertInteraction({
-        postUri: post.uri,
-        type: 'like',
-      });
-    } catch (err) {
-      console.log(err);
+      } catch (err) {
+        // console.log(err);
+      }
     }
-  }
+  }).catch((err) => {
+    console.log(err);
+  }).finally(() => {
+    console.log("done liking mentions")
+  })
 }

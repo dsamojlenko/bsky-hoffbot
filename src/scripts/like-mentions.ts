@@ -1,3 +1,6 @@
 import { likeMentions } from '../hoffbot/likeMentions';
 
-likeMentions();
+likeMentions().then(() => {
+  console.log('Done liking mentions');
+  process.exit(0);
+});

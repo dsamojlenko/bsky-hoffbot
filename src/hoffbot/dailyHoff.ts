@@ -93,8 +93,5 @@ export const dailyHoff = async () => {
     })
     .catch((err) => {
       console.error(err);
-    })
-    .finally(() => {
-      process.exit();
     });
 };
