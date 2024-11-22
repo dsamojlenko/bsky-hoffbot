@@ -1,6 +1,10 @@
+import { login } from '../bsky/auth';
 import { likeMentions } from '../hoffbot/likeMentions';
 
-likeMentions().then(() => {
-  console.log('Done liking mentions');
+(async () => {
+  const bot = await login();
+
+  await likeMentions(bot);
+
   process.exit(0);
-});
+})();

@@ -33,15 +33,15 @@ const start = async () => {
 
   const dailyHoffJob = new CronJob('0 10 * * *', async () => {
     console.log("It's 10am, time for the daily Hoff!");
-    await dailyHoff();
+    await dailyHoff(bot);
   });
 
   dailyHoffJob.start();
 
-  // This one checks the Feed for mentions of The Hoff
+  // This one checks the Feed for other mentions
   const likeMentionsJob = new CronJob('0 */3 * * *', async () => {
     console.log('Checking for mentions...');
-    await likeMentions();
+    await likeMentions(bot);
   });
 
   likeMentionsJob.start();

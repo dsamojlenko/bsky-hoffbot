@@ -1,7 +1,7 @@
 import fs from 'fs';
 import path from 'path';
-import { login } from '../bsky/auth';
 import { readFile } from 'fs/promises';
+import { Bot } from '@skyware/bot';
 
 const usedQuotesPath = path.resolve('./logs/usedQuotes.log');
 const usedImagesPath = path.resolve('./logs/usedImages.log');
@@ -70,7 +70,7 @@ const getRandomImage = async (): Promise<Blob> => {
   return blob;
 };
 
-export const dailyHoff = async () => {
+export const dailyHoff = async (bot: Bot) => {
   const quote = getRandomQuote();
   const image = await getRandomImage();
 
@@ -79,19 +79,13 @@ export const dailyHoff = async () => {
     quote,
   });
   
-  login()
-    .then(async (bot) => {
-      await bot.post({
-        text: quote,
-        images: [
-          {
-            data: image,
-            alt: 'The Hoff',
-          },
-        ],
-      });
-    })
-    .catch((err) => {
-      console.error(err);
-    });
+  await bot.post({
+    text: quote,
+    images: [
+      {
+        data: image,
+        alt: 'The Hoff',
+      },
+    ],
+  });
 };

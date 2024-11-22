@@ -1,3 +1,10 @@
+import { login } from "../bsky/auth";
 import { getPosts } from "../hoffbot/getPosts";
 
-getPosts();
+(async () => {
+  const bot = await login();
+
+  await getPosts(bot);
+
+  process.exit(0);
+})();
