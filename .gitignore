@@ -2,5 +2,13 @@
 node_modules/
 quotes.txt
 
+# Log files
 *.log
+
+# Database files (SQLite)
 *.db
+*.db-shm
+*.db-wal
+
+# Runtime files
+*.pid
