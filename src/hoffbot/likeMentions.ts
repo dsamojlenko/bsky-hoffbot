@@ -60,26 +60,31 @@ export async function likeMentions(bot: Bot) {
     throw new Error('FEED_URI not set in .env file');
   }
 
-  const feed = await bot.getFeedGenerator(FEED_URI);
-  const posts = await feed.getPosts();
+  try {
+    const feed = await bot.getFeedGenerator(FEED_URI);
+    const posts = await feed.getPosts();
 
-  for (const post of posts.posts) {
-    const interaction = await getInteraction(post.uri);
-    if (interaction) {
-      continue;
+    for (const post of posts.posts) {
+      const interaction = await getInteraction(post.uri);
+      if (interaction) {
+        continue;
+      }
+
+      try {
+        await insertInteraction({
+          postUri: post.uri,
+          type: 'like',
+        });
+
+        console.log(`Liking post ${post.uri}`);
+        post.like();
+
+      } catch (err) {
+        console.log(err);
+      }
     }
-
-    try {
-      await insertInteraction({
-        postUri: post.uri,
-        type: 'like',
-      });
-
-      console.log(`Liking post ${post.uri}`);
-      post.like();
-
-    } catch (err) {
-      console.log(err);
-    }
+  }
+  catch (err) {
+    console.log(err);
   }
 }
