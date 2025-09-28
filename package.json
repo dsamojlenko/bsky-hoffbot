@@ -1,5 +1,6 @@
 {
   "name": "bsky-hoffbot",
+  "version": "2.0.0",
   "type": "module",
   "dependencies": {
     "@skyware/bot": "^0.3.7",
@@ -16,9 +17,15 @@
   },
   "scripts": {
     "start": "mv logs/hoffbot.log logs/hoffbot-$(date +\"%Y-%m-%d_%H-%M-%S\").log 2>/dev/null || true && tsx src/index.ts | tee -a logs/hoffbot.log",
+    "start:monitor": "tsx src/utils/processMonitor.ts",
     "db:init": "tsx src/database/init.ts",
+    "health": "curl -s http://localhost:3001/health | jq '.' || curl -s http://localhost:3001/health",
     "hoffbot:daily-hoff": "tsx src/scripts/daily-hoff.ts | tee -a logs/daily-hoff.log",
     "hoffbot:get-posts": "tsx src/scripts/get-posts.ts | tee -a logs/get-posts.log",
-    "hoffbot:like-mentions": "tsx src/scripts/like-mentions.ts | tee -a logs/like-mentions.log"
+    "hoffbot:like-mentions": "tsx src/scripts/like-mentions.ts | tee -a logs/like-mentions.log",
+    "logs:clean": "find logs -name '*.log' -type f -mtime +30 -delete && echo 'Cleaned logs older than 30 days'",
+    "check:types": "tsc --noEmit",
+    "format": "prettier --write 'src/**/*.ts'",
+    "format:check": "prettier --check 'src/**/*.ts'"
   }
 }
