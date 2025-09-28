@@ -1,0 +1,32 @@
+[Unit]
+Description=Bluesky Hoffbot
+After=network.target
+StartLimitIntervalSec=0
+
+[Service]
+Type=simple
+Restart=always
+RestartSec=5
+User=hoffbot
+WorkingDirectory=/opt/bsky-hoffbot
+Environment=NODE_ENV=production
+ExecStart=/usr/bin/npm run start:monitor
+StandardOutput=journal
+StandardError=journal
+SyslogIdentifier=hoffbot
+
+# Security measures
+NoNewPrivileges=true
+PrivateTmp=true
+ProtectSystem=strict
+ProtectHome=true
+ReadWritePaths=/opt/bsky-hoffbot/logs
+ReadWritePaths=/opt/bsky-hoffbot/hoffbot.db
+
+# Resource limits
+LimitNOFILE=65536
+MemoryLimit=512M
+CPUQuota=50%
+
+[Install]
+WantedBy=multi-user.target
