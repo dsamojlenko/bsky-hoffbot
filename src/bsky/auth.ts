@@ -1,6 +1,7 @@
 import { Bot } from '@skyware/bot';
 import * as process from 'process';
 import * as dotenv from 'dotenv';
+import { Logger } from '../utils/logger';
 
 dotenv.config();
 
@@ -10,11 +11,11 @@ if (!process.env.BSKY_USERNAME || !process.env.BSKY_PASSWORD) {
 
 export const bot = new Bot({
   eventEmitterOptions: {
-    pollingInterval: 100,
+    pollingInterval: 1000, // Increased from 100ms to reduce API load
   },
 });
 
-export const login = async () => {
+export const login = async (): Promise<Bot> => {
   await bot.login({
     identifier: process.env.BSKY_USERNAME!,
     password: process.env.BSKY_PASSWORD!,
